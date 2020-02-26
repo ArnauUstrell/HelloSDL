@@ -17,7 +17,7 @@ void logSDLError(std::ostream& os, const std::string& msg) {
 void clear(SDL_Renderer* renderer) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 }
 
 void draw(SDL_Renderer* renderer, SDL_Rect* rect) {
@@ -26,34 +26,17 @@ void draw(SDL_Renderer* renderer, SDL_Rect* rect) {
 	SDL_RenderPresent(renderer);
 }
 
+void drawBala(SDL_Renderer* renderer, SDL_Rect* rect) {
+	SDL_SetRenderDrawColor(renderer, 72, 123, 23, 155);
+	SDL_RenderFillRect(renderer, rect);
+	SDL_RenderPresent(renderer);
 
+}
 
 int main(int argc, char** argv) {
-	/*
-	//STARTING SDL
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-		return 1;
-	}
-
-	//CREATING A WINDOW (X,Y,W,H, ?????????????)
-	SDL_Window* win = SDL_CreateWindow("Hello World!", 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN); //QUE FA LA ULTIMA OPCIO (SDL_WINDOW_SHOWN)
-	if (win == nullptr) {
-		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
-
-	//CREATING A RENDERER
-	SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (ren == nullptr) {
-		SDL_DestroyWindow(win);
-		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}*/
 
 
+	bool disparant = false;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
@@ -74,16 +57,23 @@ int main(int argc, char** argv) {
 	}
 
 	SDL_Rect rectangle;
-	rectangle.x = 50;
-	rectangle.y = 50;
-	rectangle.w = 50;
-	rectangle.h = 50;
+	rectangle.x = 23;
+	rectangle.y = 23;
+	rectangle.w = 23;
+	rectangle.h = 23;
+
+	SDL_Rect bala;
+	bala.x = 23;
+	bala.y = 23;
+	bala.w = 30;
+	bala.h = 10;
 
 	clear(renderer);
 
 	int quit = 0;
 	while (!quit) {
 		SDL_Event event;
+		disparant = false;
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_KEYDOWN) {
 				// Handle arrow keys
@@ -100,10 +90,12 @@ int main(int argc, char** argv) {
 				case SDL_SCANCODE_DOWN:
 					rectangle.y += 10;
 					break;
+				case SDL_SCANCODE_SPACE:
+					disparant = true;
+					break;
 				default:
 					break;
 				}
-
 			}
 			else if (event.type == SDL_QUIT) {
 				quit = 1;
@@ -111,9 +103,14 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
-
+		if (disparant) {
+			drawBala(renderer, &bala);
+			bala.x++;
+		}
+		
 		clear(renderer);
 		draw(renderer, &rectangle);
+		
 	}
 
 	SDL_DestroyRenderer(renderer);
@@ -123,6 +120,38 @@ int main(int argc, char** argv) {
 
 
 
+
+
+
+
+
+
+
+
+
+	/*
+//STARTING SDL
+if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+	std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+	return 1;
+}
+
+//CREATING A WINDOW (X,Y,W,H, ?????????????)
+SDL_Window* win = SDL_CreateWindow("Hello World!", 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN); //QUE FA LA ULTIMA OPCIO (SDL_WINDOW_SHOWN)
+if (win == nullptr) {
+	std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+	SDL_Quit();
+	return 1;
+}
+
+//CREATING A RENDERER
+SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+if (ren == nullptr) {
+	SDL_DestroyWindow(win);
+	std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+	SDL_Quit();
+	return 1;
+}*/
 
 	//system("PAUSE");
 
